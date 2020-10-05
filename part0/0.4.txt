@@ -1,0 +1,16 @@
+title Adding A New Note
+
+note left of Browser: 
+User clicks the save button.
+end note
+
+Browser->Server: HTTP POST to "/new_note" sent form data
+
+note right of Server: 
+a new object is created
+with form data 
+and current timestamp 
+and added to "notes" array
+end note
+
+Server->Browser: 302 URL Redirect to /notes

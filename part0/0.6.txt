@@ -1,0 +1,25 @@
+title Adding A New Note in SPA
+
+note left of Browser: 
+User clicks the save button.
+end note
+
+note left of Browser: 
+a new object is created
+with form data 
+and current timestamp 
+and added to local "notes" array
+end note
+
+note left of Browser: 
+input field is reset
+to empty string
+end note
+
+note left of Browser: 
+updated "notes" array
+is rendered to display again
+end note
+
+Browser->Server: HTTP POST to "/exampleapp/new_note_spa" sent "note" object
+Server->Browser: 201 Created
