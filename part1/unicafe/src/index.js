@@ -27,9 +27,14 @@ const Statisctics = (props) => {
     positivePercentage,
   } = props;
 
+  if(totalFeedback === 0) {
+      return (
+          <div>No feedback given</div>
+      );
+  }
+
   return (
     <div>
-      <h2>Statistics</h2>
       <Statistic name="good" count={good} />
       <Statistic name="neutral" count={neutral} />
       <Statistic name="bad" count={bad} />
@@ -75,6 +80,7 @@ const App = () => {
       <Button handleClick={() => setGood(good + 1)} text="good" />
       <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button handleClick={() => setBad(bad + 1)} text="bad" />
+      <h2>Statistics</h2>
       <Statisctics
         good={good}
         neutral={neutral}
