@@ -23,16 +23,42 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const totalFeedback = () => {
+      return good+neutral+bad;
+  }
+
+  const average = () => {
+      let result = (good-bad) / totalFeedback();
+
+      if(isNaN(result)) {
+        result = 0;
+      } 
+      return result;
+  }
+
+  const positivePercentage = () => {
+      let result = 100 * good / totalFeedback();
+
+      if(isNaN(result)) {
+        result = 0;
+      } 
+
+      return result + " %";
+  }
+
   return (
     <div>
         <h1>give feedback</h1>
       <Button handleClick={() => setGood(good+1)} text="good" />
-      <Button handleClick={() => setNeutral(neutral+1)} text="good" />
-      <Button handleClick={() => setBad(bad+1)} text="good" />
+      <Button handleClick={() => setNeutral(neutral+1)} text="neutral" />
+      <Button handleClick={() => setBad(bad+1)} text="bad" />
       <h2>statistics</h2>
       <Statistic name="good" count={good} />
       <Statistic name="neutral" count={neutral} />
       <Statistic name="bad" count={bad} />
+      <Statistic name="all" count={totalFeedback()} />
+      <Statistic name="average" count={average()} />
+      <Statistic name="positive" count={positivePercentage()} />
     </div>
   )
 }
