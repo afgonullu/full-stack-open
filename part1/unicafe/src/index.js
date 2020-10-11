@@ -11,9 +11,10 @@ const Statistic = (props) => {
   const { name, count } = props;
 
   return (
-    <p>
-      {name} : {count}
-    </p>
+    <tr>
+      <td>{name}</td>
+      <td>{count}</td>
+    </tr>
   );
 };
 
@@ -27,21 +28,27 @@ const Statistics = (props) => {
     positivePercentage,
   } = props;
 
-  if(totalFeedback === 0) {
-      return (
-          <div>No feedback given</div>
-      );
+  if (totalFeedback === 0) {
+    return <div>No feedback given</div>;
   }
 
   return (
-    <div>
-      <Statistic name="good" count={good} />
-      <Statistic name="neutral" count={neutral} />
-      <Statistic name="bad" count={bad} />
-      <Statistic name="all" count={totalFeedback} />
-      <Statistic name="average" count={average} />
-      <Statistic name="positive" count={positivePercentage} />
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <Statistic name="good" count={good} />
+        <Statistic name="neutral" count={neutral} />
+        <Statistic name="bad" count={bad} />
+        <Statistic name="all" count={totalFeedback} />
+        <Statistic name="average" count={average} />
+        <Statistic name="positive" count={positivePercentage} />
+      </tbody>
+    </table>
   );
 };
 
