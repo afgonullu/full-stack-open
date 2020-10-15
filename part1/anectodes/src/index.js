@@ -5,8 +5,15 @@ const App = (props) => {
   const { anecdotes } = props;
 
   const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0));
 
-  const handleClick = () => {
+  const handleVote = () => {
+    const nextPoints = [...points];
+    nextPoints[selected] += 1;
+    setPoints(nextPoints);
+  };
+
+  const handleChange = () => {
     let next = selected;
     while (next === selected) {
       next = Math.floor(Math.random() * anecdotes.length);
@@ -18,7 +25,9 @@ const App = (props) => {
   return (
     <div>
       <p>{props.anecdotes[selected]}</p>
-      <button onClick={handleClick}>next anectode</button>
+      <p>has {points[selected]} points.</p>
+      <button onClick={handleVote}>vote</button>
+      <button onClick={handleChange}>next anectode</button>
     </div>
   );
 };
@@ -30,6 +39,7 @@ const anecdotes = [
   "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
   "Premature optimization is the root of all evil.",
   "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+  "AFG; I can make a quote",
 ];
 
 ReactDOM.render(<App anecdotes={anecdotes} />, document.getElementById("root"));
