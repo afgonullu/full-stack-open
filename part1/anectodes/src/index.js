@@ -7,6 +7,12 @@ const App = (props) => {
   const [selected, setSelected] = useState(0);
   const [points, setPoints] = useState(Array(anecdotes.length).fill(0));
 
+  const getMostVotedAnecdote = () => {
+    let index = points.indexOf(Math.max(...points));
+    console.log(index);
+    return anecdotes[index];
+  };
+
   const handleVote = () => {
     const nextPoints = [...points];
     nextPoints[selected] += 1;
@@ -24,10 +30,13 @@ const App = (props) => {
 
   return (
     <div>
+      <h2>anecdate of the day</h2>
       <p>{props.anecdotes[selected]}</p>
       <p>has {points[selected]} points.</p>
       <button onClick={handleVote}>vote</button>
       <button onClick={handleChange}>next anectode</button>
+      <h2>most voted anecdote</h2>
+      <p>{getMostVotedAnecdote()}</p>
     </div>
   );
 };
