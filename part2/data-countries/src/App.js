@@ -7,9 +7,12 @@ const App = (props) => {
   const [result, setResult] = useState([])
   const [output, setOutput] = useState([])
   const [details, setDetails] = useState([])
+  const [tempDetails, setTempDetails] = useState({})
 
   const showCountryDetails = (country) => {
-    console.log(country)
+    setOutput([])
+    setSearch("")
+    getWeatherDetails(country.capital)
     return (
       <div>
         <h1>{country.name}</h1>
@@ -27,8 +30,29 @@ const App = (props) => {
           height="auto"
           alt="country flag"
         />
+        <h3>Weather in {country.capital}</h3>
+        <p>temperature: {tempDetails.temp} Celcius</p>
+        <img src={tempDetails.icon} alt="Temp Icon" />
+        <p>Wind Speed: {tempDetails.windSpeed} mph</p>
+        <p>Wind Direction: {tempDetails.windDir}</p>
       </div>
     )
+  }
+
+  async function getWeatherDetails(capital) {
+    await axios
+      .get(
+        `http://api.weatherstack.com/current?access_key=14218e53555180130b304f878084a26d&query=${capital}`
+      )
+      .then((response) => {
+        console.log(response.data.current)
+        setTempDetails({
+          temp: response.data.current.temperature,
+          icon: response.data.current.weather_icons,
+          windSpeed: response.data.current.wind_speed,
+          windDir: response.data.current.wind_dir,
+        })
+      })
   }
 
   useEffect(() => {
@@ -47,7 +71,11 @@ const App = (props) => {
 
   useEffect(() => {
     if (result.length > 10) {
-      setOutput(["too many matches, specify another filter"])
+      if (search === "") {
+        setOutput([""])
+      } else {
+        setOutput(["too many matches, specify another filter"])
+      }
     } else if (result.length === 1) {
       setDetails(
         result.map((country) => {
