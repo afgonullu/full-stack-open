@@ -6,6 +6,30 @@ const App = (props) => {
   const [countries, setCountries] = useState([])
   const [result, setResult] = useState([])
   const [output, setOutput] = useState([])
+  const [details, setDetails] = useState([])
+
+  const showCountryDetails = (country) => {
+    console.log(country)
+    return (
+      <div>
+        <h1>{country.name}</h1>
+        <p>capital: {country.capital}</p>
+        <p>population: {country.population}</p>
+        <h3>Languages</h3>
+        <ul>
+          {country.languages.map((language) => (
+            <li key={language.name}>{language.name}</li>
+          ))}
+        </ul>
+        <img
+          src={country.flag}
+          width="100px"
+          height="auto"
+          alt="country flag"
+        />
+      </div>
+    )
+  }
 
   useEffect(() => {
     axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
@@ -25,38 +49,29 @@ const App = (props) => {
     if (result.length > 10) {
       setOutput(["too many matches, specify another filter"])
     } else if (result.length === 1) {
-      setOutput(
+      setDetails(
         result.map((country) => {
-          return (
-            <div>
-              <h1>{country.name}</h1>
-              <p>capital: {country.capital}</p>
-              <p>population: {country.population}</p>
-              <h3>Languages</h3>
-              <ul>
-                {country.languages.map((language) => (
-                  <li key={language.name}>{language.name}</li>
-                ))}
-              </ul>
-              <img
-                src={country.flag}
-                width="100px"
-                height="auto"
-                alt="country flag"
-              />
-            </div>
-          )
+          return showCountryDetails(country)
         })
       )
     } else {
       setOutput(
-        result.map((country) => <li key={country.name}>{country.name}</li>)
+        result.map((country) => (
+          <li key={country.name}>
+            {country.name}
+            <button onClick={() => setDetails(showCountryDetails(country))}>
+              show
+            </button>
+          </li>
+        ))
       )
     }
   }, [result])
 
   const handleSearch = (event) => {
     setSearch(event.target.value)
+    setDetails([])
+    setOutput([])
   }
 
   return (
@@ -67,7 +82,8 @@ const App = (props) => {
       </span>
       <h2>Result</h2>
       <div>
-        <ul>{output}</ul>
+        {output}
+        {details}
       </div>
     </React.Fragment>
   )
