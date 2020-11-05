@@ -6,6 +6,8 @@ import {
   getAllPersons,
   createNewPerson,
   deletePerson,
+  getPerson,
+  updatePerson,
 } from "./services/phoneList"
 
 const App = () => {
@@ -40,22 +42,35 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const current = persons.map((person) => person.name)
-
-    if (current.includes(newName)) {
-      alert(`${newName} is already added to phonebook`)
-    } else {
-      const newPerson = {
+    getPerson(newName).then((person) => {
+      let newPerson = {
         name: newName,
         number: newNumber,
       }
 
-      createNewPerson(newPerson).then((response) => {
-        setPersons(persons.concat(response))
-        setNewName("")
-        setNewNumber("")
-      })
-    }
+      if (person.length === 0) {
+        createNewPerson(newPerson).then((response) => {
+          setPersons(persons.concat(response))
+          setNewName("")
+          setNewNumber("")
+        })
+      } else {
+        newPerson = { ...newPerson, id: person[0].id }
+        updatePerson(newPerson).then((response) => {
+          getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
+        })
+      }
+    })
+
+    // updatePerson(newPerson).then((response) => {
+    //   getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
+    // })
+
+    // createNewPerson(newPerson).then((response) => {
+    //   setPersons(persons.concat(response))
+    //   setNewName("")
+    //   setNewNumber("")
+    // })
   }
 
   return (
