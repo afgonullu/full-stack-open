@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import Search from "./components/Search"
 import AddNew from "./components/AddNew"
 import PhoneList from "./components/PhoneList"
+import InfoMessage from "./components/InfoMessage"
 import {
   getAllPersons,
   createNewPerson,
@@ -15,6 +16,7 @@ const App = () => {
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [search, setSearch] = useState("")
+  const [alert, setAlert] = useState({})
 
   useEffect(() => {
     getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
@@ -25,6 +27,10 @@ const App = () => {
     deletePerson(id).then(
       setPersons(persons.filter((person) => person.id !== id))
     )
+    setAlert({ message: `You deleted ${name}`, type: "alert danger" })
+    setTimeout(() => {
+      setAlert({})
+    }, 5000)
   }
 
   const handleSearch = (event) => {
@@ -54,6 +60,14 @@ const App = () => {
           setNewName("")
           setNewNumber("")
         })
+
+        setAlert({
+          message: `You created a new record for ${newPerson.name}`,
+          type: "alert success",
+        })
+        setTimeout(() => {
+          setAlert({})
+        }, 5000)
       } else {
         newPerson = { ...newPerson, id: person[0].id }
         window.confirm(
@@ -62,6 +76,13 @@ const App = () => {
         updatePerson(newPerson).then((response) => {
           getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
         })
+        setAlert({
+          message: `You Updated the details of ${newPerson.name}`,
+          type: "alert success",
+        })
+        setTimeout(() => {
+          setAlert({})
+        }, 5000)
       }
     })
   }
@@ -69,6 +90,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <InfoMessage message={alert.message} alertType={alert.type} />
       <h2>Search</h2>
       <Search search={search} handleSearch={handleSearch} />
       <h2>Add New Record</h2>
