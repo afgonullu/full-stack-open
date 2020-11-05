@@ -7,7 +7,9 @@ const PhoneListItem = (props) => {
         {props.person.name} {props.person.number}
       </span>
       <span>
-        <button onClick={() => props.handleDelete(props.person.id)}>
+        <button
+          onClick={() => props.handleDelete(props.person.id, props.person.name)}
+        >
           Delete
         </button>
       </span>

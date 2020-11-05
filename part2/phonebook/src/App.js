@@ -20,8 +20,8 @@ const App = () => {
     getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
   }, [])
 
-  const handleDelete = (id) => {
-    console.log(id)
+  const handleDelete = (id, name) => {
+    window.confirm(`Deleting ${name}. Are You Sure?`)
     deletePerson(id).then(
       setPersons(persons.filter((person) => person.id !== id))
     )
@@ -56,21 +56,14 @@ const App = () => {
         })
       } else {
         newPerson = { ...newPerson, id: person[0].id }
+        window.confirm(
+          `You are updating details of ${newPerson.name}. Are You Sure?`
+        )
         updatePerson(newPerson).then((response) => {
           getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
         })
       }
     })
-
-    // updatePerson(newPerson).then((response) => {
-    //   getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
-    // })
-
-    // createNewPerson(newPerson).then((response) => {
-    //   setPersons(persons.concat(response))
-    //   setNewName("")
-    //   setNewNumber("")
-    // })
   }
 
   return (
