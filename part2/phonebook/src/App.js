@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react"
-import axios from "axios"
 import Search from "./components/Search"
 import AddNew from "./components/AddNew"
 import PhoneList from "./components/PhoneList"
-import { getAllPersons, createNewPerson } from "./services/phoneList"
+import {
+  getAllPersons,
+  createNewPerson,
+  deletePerson,
+} from "./services/phoneList"
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -14,6 +17,13 @@ const App = () => {
   useEffect(() => {
     getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
   }, [])
+
+  const handleDelete = (id) => {
+    console.log(id)
+    deletePerson(id).then(
+      setPersons(persons.filter((person) => person.id !== id))
+    )
+  }
 
   const handleSearch = (event) => {
     setSearch(event.target.value)
@@ -62,7 +72,11 @@ const App = () => {
         newNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <PhoneList persons={persons} search={search} />
+      <PhoneList
+        persons={persons}
+        search={search}
+        handleDelete={handleDelete}
+      />
     </div>
   )
 }

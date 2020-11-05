@@ -6,7 +6,9 @@ const PhoneList = (props) => {
     <ul>
       {props.persons.map((person) => {
         if (person.name.toUpperCase().includes(props.search.toUpperCase())) {
-          return <PhoneListItem person={person} />
+          return (
+            <PhoneListItem person={person} handleDelete={props.handleDelete} />
+          )
         }
         return null
       })}
