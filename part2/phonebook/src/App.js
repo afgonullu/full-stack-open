@@ -74,7 +74,17 @@ const App = () => {
           `You are updating details of ${newPerson.name}. Are You Sure?`
         )
         updatePerson(newPerson).then((response) => {
-          getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
+          getAllPersons()
+            .then((initialNumbers) => setPersons(initialNumbers))
+            .catch((error) => {
+              setAlert({
+                message: `${newPerson.name} doesn't exist on the database.`,
+                type: "alert danger",
+              })
+              setTimeout(() => {
+                setAlert({})
+              }, 5000)
+            })
         })
         setAlert({
           message: `You Updated the details of ${newPerson.name}`,
