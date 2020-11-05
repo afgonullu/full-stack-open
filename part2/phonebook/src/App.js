@@ -3,6 +3,7 @@ import axios from "axios"
 import Search from "./components/Search"
 import AddNew from "./components/AddNew"
 import PhoneList from "./components/PhoneList"
+import { getAllPersons, createNewPerson } from "./services/phoneList"
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,9 +12,7 @@ const App = () => {
   const [search, setSearch] = useState("")
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data)
-    })
+    getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
   }, [])
 
   const handleSearch = (event) => {
@@ -41,13 +40,11 @@ const App = () => {
         number: newNumber,
       }
 
-      axios
-        .post("http://localhost:3001/persons", newPerson)
-        .then((response) => {
-          setPersons(persons.concat(newPerson))
-          setNewName("")
-          setNewNumber("")
-        })
+      createNewPerson(newPerson).then((response) => {
+        setPersons(persons.concat(response))
+        setNewName("")
+        setNewNumber("")
+      })
     }
   }
 
