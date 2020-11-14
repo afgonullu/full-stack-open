@@ -48,44 +48,24 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    getPerson(newName).then((person) => {
-      let newPerson = {
-        name: newName,
-        number: newNumber,
-      }
+    let newPerson = {
+      name: newName,
+      number: newNumber,
+    }
 
-      if (person.length === 0) {
-        createNewPerson(newPerson).then((response) => {
-          setPersons(persons.concat(response))
-          setNewName("")
-          setNewNumber("")
-        })
+    console.log(
+      "is array includes name:",
+      persons.some((person) => person.name === newName)
+    )
 
-        setAlert({
-          message: `You created a new record for ${newPerson.name}`,
-          type: "alert success",
-        })
-        setTimeout(() => {
-          setAlert({})
-        }, 5000)
-      } else {
-        newPerson = { ...newPerson, id: person[0].id }
-        window.confirm(
-          `You are updating details of ${newPerson.name}. Are You Sure?`
-        )
-        updatePerson(newPerson).then((response) => {
-          getAllPersons()
-            .then((initialNumbers) => setPersons(initialNumbers))
-            .catch((error) => {
-              setAlert({
-                message: `${newPerson.name} doesn't exist on the database.`,
-                type: "alert danger",
-              })
-              setTimeout(() => {
-                setAlert({})
-              }, 5000)
-            })
-        })
+    if (persons.some((person) => person.name === newName)) {
+      const person = persons.find((person) => person.name === newName)
+
+      newPerson = { ...person, number: newNumber }
+      console.log("there is an entry in the database, updating...")
+      updatePerson(newPerson).then((response) => {
+        console.log(response)
+        getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
         setAlert({
           message: `You Updated the details of ${newPerson.name}`,
           type: "alert success",
@@ -93,8 +73,27 @@ const App = () => {
         setTimeout(() => {
           setAlert({})
         }, 5000)
-      }
-    })
+      })
+    } else {
+      console.log("new contact creation")
+
+      console.log(newPerson)
+
+      createNewPerson(newPerson).then((response) => {
+        console.log("here")
+        console.log(response)
+        setPersons(persons.concat(response))
+        setNewName("")
+        setNewNumber("")
+        setAlert({
+          message: `You created a new record for ${newPerson.name}`,
+          type: "alert success",
+        })
+        setTimeout(() => {
+          setAlert({})
+        }, 5000)
+      })
+    }
   }
 
   return (
