@@ -7,7 +7,6 @@ import {
   getAllPersons,
   createNewPerson,
   deletePerson,
-  getPerson,
   updatePerson,
 } from "./services/phoneList"
 
@@ -22,15 +21,22 @@ const App = () => {
     getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
   }, [])
 
+  const createNewAlert = (alert) => {
+    setAlert({
+      message: alert[0],
+      type: alert[1],
+    })
+    setTimeout(() => {
+      setAlert({})
+    }, 5000)
+  }
+
   const handleDelete = (id, name) => {
     window.confirm(`Deleting ${name}. Are You Sure?`)
     deletePerson(id).then(
       setPersons(persons.filter((person) => person.id !== id))
     )
-    setAlert({ message: `You deleted ${name}`, type: "alert danger" })
-    setTimeout(() => {
-      setAlert({})
-    }, 5000)
+    createNewAlert([`You deleted ${name}`, "alert danger"])
   }
 
   const handleSearch = (event) => {
@@ -63,36 +69,40 @@ const App = () => {
 
       newPerson = { ...person, number: newNumber }
       console.log("there is an entry in the database, updating...")
-      updatePerson(newPerson).then((response) => {
-        console.log(response)
-        getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
-        setAlert({
-          message: `You Updated the details of ${newPerson.name}`,
-          type: "alert success",
+      updatePerson(newPerson)
+        .then((response) => {
+          console.log(response)
+          getAllPersons().then((initialNumbers) => setPersons(initialNumbers))
+          createNewAlert([
+            `You Updated the details of ${newPerson.name}`,
+            "alert success",
+          ])
         })
-        setTimeout(() => {
-          setAlert({})
-        }, 5000)
-      })
+        .catch((error) => {
+          console.log(error.response.data)
+          createNewAlert([error.response.data.error, "alert danger"])
+        })
     } else {
       console.log("new contact creation")
 
       console.log(newPerson)
 
-      createNewPerson(newPerson).then((response) => {
-        console.log("here")
-        console.log(response)
-        setPersons(persons.concat(response))
-        setNewName("")
-        setNewNumber("")
-        setAlert({
-          message: `You created a new record for ${newPerson.name}`,
-          type: "alert success",
+      createNewPerson(newPerson)
+        .then((response) => {
+          console.log("here")
+          console.log(response)
+          setPersons(persons.concat(response))
+          setNewName("")
+          setNewNumber("")
+          createNewAlert([
+            `You created a new record for ${newPerson.name}`,
+            "alert success",
+          ])
         })
-        setTimeout(() => {
-          setAlert({})
-        }, 5000)
-      })
+        .catch((error) => {
+          console.log(error.response.data)
+          createNewAlert([error.response.data.error, "alert danger"])
+        })
     }
   }
 
